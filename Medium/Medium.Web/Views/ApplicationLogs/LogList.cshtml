@@ -1,0 +1,77 @@
+﻿@model IEnumerable<ApplicationLogs>
+
+@{
+    ViewData["Title"] = "Log List";
+}
+
+<div>
+    <h1>Application Logs</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form asp-action="ClearLogs" method="post">
+        <button type="submit" class="btn btn-danger">Clear Logs</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Log Id</th>
+                <th>Message</th>
+                <th>Level</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td>@log.Id</td>
+                    <td>@log.Message</td>
+                    <td>@log.Level</td>
+                    <td>@log.TimeStamp</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/ApplicationLogs/LogList?page=@(ViewBag.CurrentPage - 1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="/ApplicationLogs/LogList?page=@i">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/ApplicationLogs/LogList?page=@(ViewBag.CurrentPage + 1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
