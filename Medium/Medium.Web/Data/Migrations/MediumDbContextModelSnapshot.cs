@@ -53,7 +53,7 @@ namespace Medium.Web.Data.Migrations
                     b.ToTable("ApplicationLogs");
                 });
 
-            modelBuilder.Entity("Medium.Domain.Entities.Category", b =>
+            modelBuilder.Entity("Medium.Domain.Entities.Categorries", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

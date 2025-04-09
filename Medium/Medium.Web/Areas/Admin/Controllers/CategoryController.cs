@@ -1,6 +1,7 @@
-﻿using Medium.Domain;
+﻿using MediatR;
+using Medium.Application.Features.Categories.Commands;
+using Medium.Domain;
 using Medium.Domain.Entities;
-using Medium.Domain.ServicesInterface;
 using Medium.Web.Areas.Admin.Models.Category;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +11,15 @@ namespace Medium.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ICategoryManagementService _categoryManagementService;
+        private readonly IMediator _mediator;
         private readonly IApplicationTime _applicationTime;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryManagementService categoryManagementService,
+        public CategoryController(IMediator mediator,
             IApplicationTime applicationTime,
             ILogger<CategoryController> logger)
         {
-            _categoryManagementService = categoryManagementService;
+            _mediator = mediator;
             _applicationTime = applicationTime;
             _logger = logger;
         }
@@ -34,22 +35,13 @@ namespace Medium.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCategory(CategoryCreatModel model)
+        public async Task<IActionResult> CreateCategory(CreateCategoryCommand command)
         {
             if (ModelState.IsValid)
             {
-                var category = new Category
-                { 
-                    Id = Guid.NewGuid(),
-                    Name = model.Name,
-                    Description = model.Description,
-                    CreatedDate = _applicationTime.GetCurrentDateTime(),
-                    UpdatedDate = _applicationTime.GetCurrentDateTime(),
-                };
-
-                await _categoryManagementService.AddCategoryAsync(category);
+                await _mediator.Send(command);
             }
-            return View(model);
+            return View(command);
         }
     }
 }

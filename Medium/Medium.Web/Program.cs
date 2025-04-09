@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Medium.Application.Features.Categories.Commands;
 using Medium.Infrastructure.Data;
 using Medium.Web.Data;
 using Medium.Web.WebModules;
@@ -55,11 +56,13 @@ namespace Medium.Web
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
                 var migrationAssembly = Assembly.GetExecutingAssembly() ?? throw new InvalidOperationException("Migration Assembly not found.");
 
+                Assembly dbContextAssembly = Assembly.GetAssembly(typeof(ApplicationDbContext)) ?? throw new InvalidOperationException("Migration Assembly not found."); ;
+
                 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(connectionString));
+                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(dbContextAssembly)));
 
                 builder.Services.AddDbContext<MediumDbContext>(options =>
-                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
+                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(dbContextAssembly)));
 
                 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -71,9 +74,15 @@ namespace Medium.Web
                 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
                     .ConfigureContainer<ContainerBuilder>(containerBuilder =>
                     {
-                        containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly.FullName));
+                        containerBuilder.RegisterModule<WebModule>();
                     });
                 #endregion
+
+                builder.Services.AddMediatR(mfg =>
+                {
+                    mfg.RegisterServicesFromAssembly(migrationAssembly);
+                    mfg.RegisterServicesFromAssembly(typeof(CreateCategoryCommand).Assembly);
+                });
 
                 var app = builder.Build();
 
