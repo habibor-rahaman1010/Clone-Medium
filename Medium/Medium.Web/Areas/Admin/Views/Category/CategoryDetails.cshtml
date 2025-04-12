@@ -1,0 +1,17 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="container-fluid mt-3">
+    <h3>This is @Model.Name category</h3>
+
+    <div>
+        <p>@Model.Name</p>
+        <p>@Model.Description</p>
+        <p>@Model.CreatedDate</p>
+        <p>@Model.UpdatedDate</p>
+    </div>
+    
+</div>
