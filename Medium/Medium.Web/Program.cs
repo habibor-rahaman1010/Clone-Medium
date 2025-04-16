@@ -38,6 +38,8 @@ namespace Medium.Web
                 Log.Information("Application Starting...");
                 var builder = WebApplication.CreateBuilder(args);
 
+                builder.WebHost.UseUrls("http://*:80");
+
                 #region Serilog Configuration
                 builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
                 {
