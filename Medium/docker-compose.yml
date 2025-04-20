@@ -1,0 +1,19 @@
+version: "3"
+services:
+    web:
+        build: 
+            context: .
+            dockerfile: Medium.Web/Dockerfile
+        image: medium-image
+        env_file: 
+            - web.env
+        volumes:
+            - medium-data:/app/Logs
+        ports:
+            - "8080:80"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Production
+        entrypoint: ["dotnet", "Medium.Web.dll"]
+volumes:
+    medium-data:
+        external: true
