@@ -3,6 +3,7 @@ using Medium.Domain.Entities;
 using Medium.Domain.ServicesInterface;
 using Medium.Web.Areas.Admin.Models.Category;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 
 namespace Medium.Web.Areas.Admin.Controllers
@@ -23,9 +24,17 @@ namespace Medium.Web.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public IActionResult CategoryList()
+        public async Task<IActionResult> CategoryList(int pageIndex = 1, int pageSize = 5)
         {
-            return View();
+            var pagedResult = await _categoryManagementService.GetCategoriesAsync(pageIndex, pageSize);
+
+            ViewBag.CurrentPage = pagedResult.CurrentPage;
+            ViewBag.TotalPages = pagedResult.TotalPages;
+            ViewBag.TotalItems = pagedResult.TotalItems;
+
+            var categories = pagedResult.Items;
+
+            return View(categories);
         }
 
         public IActionResult CreateCategory()

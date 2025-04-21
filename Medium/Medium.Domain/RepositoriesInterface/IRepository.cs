@@ -6,7 +6,7 @@ namespace Medium.Domain.RepositoriesInterface
         where TEntity : class, IEntity<TKey> 
         where TKey : IComparable<TKey>
     {
-        public Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+        public Task<(IList<TEntity> Items, int CurrentPage, int TotalPages, int TotalItems, int PageSize)> GetAllAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default);
         public Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
         public Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
         public Task UpdateAsync(TKey id, CancellationToken cancellationToken = default);

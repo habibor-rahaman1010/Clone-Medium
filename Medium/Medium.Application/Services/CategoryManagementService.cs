@@ -18,5 +18,10 @@ namespace Medium.Application.Services
             await _mediumUnitOfWork.CategoryRepository.AddAsync(category);
             await _mediumUnitOfWork.SaveAsync();
         }
+
+        public async Task<(IList<Category> Items, int CurrentPage, int TotalPages, int TotalItems, int PageSize)> GetCategoriesAsync(int pageIndex, int pageSize)
+        {
+            return await _mediumUnitOfWork.CategoryRepository.GetAllAsync(pageIndex, pageSize);
+        }
     }
 }

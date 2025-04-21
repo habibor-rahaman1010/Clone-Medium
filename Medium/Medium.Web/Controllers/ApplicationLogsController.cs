@@ -1,5 +1,4 @@
 ﻿using Medium.Infrastructure.Data;
-using Medium.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Medium.Web.Controllers
