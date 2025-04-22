@@ -23,5 +23,16 @@ namespace Medium.Application.Services
         {
             return await _mediumUnitOfWork.CategoryRepository.GetAllAsync(pageIndex, pageSize);
         }
+
+        public async Task<Category> GetCategoryById(Guid id)
+        {
+            return await _mediumUnitOfWork.CategoryRepository.GetByIdAsync(id);
+        }
+
+        public async Task UpdateCategoryAsync(Category category)
+        {
+            await _mediumUnitOfWork.CategoryRepository.UpdateAsync(category);
+            await _mediumUnitOfWork.SaveAsync();
+        }
     }
 }

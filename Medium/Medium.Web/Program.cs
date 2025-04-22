@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Mapster;
 using Medium.Infrastructure.Data;
 using Medium.Web.Data;
+using Medium.Web.MapsterProfiles;
 using Medium.Web.WebModules;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -74,6 +76,10 @@ namespace Medium.Web
                         containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly.FullName));
                     });
                 #endregion
+
+                //Mapsater Register here
+                TypeAdapterConfig.GlobalSettings.Apply(new MapsterWebProfile());
+                builder.Services.AddMapster();
 
                 var app = builder.Build();
 
