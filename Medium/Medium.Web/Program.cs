@@ -16,7 +16,7 @@ namespace Medium.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             #region Bootstrap Logger
             var configuration = new ConfigurationBuilder()
@@ -115,7 +115,7 @@ namespace Medium.Web
                 app.MapRazorPages()
                    .WithStaticAssets();
 
-                app.Run();
+                await app.RunAsync();
             }
             catch (Exception ex)
             {
@@ -123,7 +123,7 @@ namespace Medium.Web
             }
             finally
             {
-                Log.CloseAndFlush();
+                 await Log.CloseAndFlushAsync();
             }
         }
     }

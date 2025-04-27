@@ -34,5 +34,11 @@ namespace Medium.Application.Services
             await _mediumUnitOfWork.CategoryRepository.UpdateAsync(category);
             await _mediumUnitOfWork.SaveAsync();
         }
+
+        public async Task DeleteCategoryAsync(Category category)
+        {
+            await _mediumUnitOfWork.CategoryRepository.DeleteAsync(category);
+            await _mediumUnitOfWork.SaveAsync();
+        }
     }
 }

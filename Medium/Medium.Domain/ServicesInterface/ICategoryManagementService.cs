@@ -8,6 +8,6 @@ namespace Medium.Domain.ServicesInterface
         Task<Category> GetCategoryById(Guid id);  
         Task AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);
-        //Task DeleteCategoryAsync(Guid id);
+        Task DeleteCategoryAsync(Category category);
     }
 }

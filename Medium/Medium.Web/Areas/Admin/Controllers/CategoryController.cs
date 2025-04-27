@@ -39,18 +39,13 @@ namespace Medium.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var category = new Category
-                { 
-                    Id = Guid.NewGuid(),
-                    Name = model.Name,
-                    Description = model.Description,
-                    CreatedDate = _applicationTime.GetCurrentDateTime(),
-                    UpdatedDate = _applicationTime.GetCurrentDateTime(),
-                };
+                var category = await model.BuildAdapter().AdaptToTypeAsync<Category>();
+                category.CreatedDate = _applicationTime.GetCurrentDateTime();
+                category.UpdatedDate = _applicationTime.GetCurrentDateTime();
 
                 await _categoryManagementService.AddCategoryAsync(category);
             }
-            return View(model);
+            return RedirectToAction("CategoryList", "Category");
         }
 
         public async Task<IActionResult> CategoryList(int pageIndex = 1, int pageSize = 5)
@@ -98,15 +93,24 @@ namespace Medium.Web.Areas.Admin.Controllers
             {
                 return NotFound(category);
             }
-
-            //model.Adapt(category);
-
             category = _mapper.Map(model, category);
 
             category.UpdatedDate = _applicationTime.GetCurrentDateTime();
             await _categoryManagementService.UpdateCategoryAsync(category);
 
             return RedirectToAction(nameof(CategoryList), "Category");
+        }
+
+        public async Task<IActionResult> DeleteCategory(Guid id)
+        {
+            var category = await _categoryManagementService.GetCategoryById(id);
+
+            if (category != null)
+            {
+                await _categoryManagementService.DeleteCategoryAsync(category);
+                return RedirectToAction(nameof(CategoryList), "Category");
+            }
+            return NotFound(category);
         }
     }
 }
