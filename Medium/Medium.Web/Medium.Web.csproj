@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Medium.Infrastructure\Medium.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
 </Project>
