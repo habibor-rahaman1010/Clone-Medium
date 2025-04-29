@@ -49,12 +49,14 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Category Name</label>
-                                <input type="text" asp-for="Name" class="form-control" />
+                                <input type="text" asp-for="Name" class="form-control mb-2" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Description</label>
-                                <input type="text" asp-for="Description" class="form-control" />
+                                <input type="text" asp-for="Description" class="form-control mb-2" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
                         </div>
                         <!--end::Body-->
@@ -75,3 +77,8 @@
     <!--end::Container-->
 </div>
 
+@section Scripts {
+    @* This is jquery link for frontend validation *@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

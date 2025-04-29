@@ -38,15 +38,17 @@ namespace Medium.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CategoryCreatModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var category = await model.BuildAdapter().AdaptToTypeAsync<Category>();
-                category.Id = IdentityGenerator.NewSequentialGuid();
-                category.CreatedDate = _applicationTime.GetCurrentDateTime();
-                category.UpdatedDate = _applicationTime.GetCurrentDateTime();
-
-                await _categoryManagementService.AddCategoryAsync(category);
+                return View(model);
             }
+            var category = await model.BuildAdapter().AdaptToTypeAsync<Category>();
+            category.Id = IdentityGenerator.NewSequentialGuid();
+            category.CreatedDate = _applicationTime.GetCurrentDateTime();
+            category.UpdatedDate = _applicationTime.GetCurrentDateTime();
+
+            await _categoryManagementService.AddCategoryAsync(category);
+
             return RedirectToAction("CategoryList", "Category");
         }
 
@@ -90,6 +92,13 @@ namespace Medium.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(CategoryUpdateModel model)
         {
+            var dto = _mapper.Map<CategoryDto>(model);
+
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(UpdateCategory), dto);
+            }
+
             var category = await _categoryManagementService.GetCategoryById(model.Id);
             if (category == null)
             {
