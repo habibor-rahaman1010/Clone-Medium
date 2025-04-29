@@ -4,6 +4,7 @@ using Medium.Application.DTO;
 using Medium.Domain;
 using Medium.Domain.Entities;
 using Medium.Domain.ServicesInterface;
+using Medium.Domain.Utilities;
 using Medium.Web.Areas.Admin.Models.Category;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,7 @@ namespace Medium.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var category = await model.BuildAdapter().AdaptToTypeAsync<Category>();
+                category.Id = IdentityGenerator.NewSequentialGuid();
                 category.CreatedDate = _applicationTime.GetCurrentDateTime();
                 category.UpdatedDate = _applicationTime.GetCurrentDateTime();
 
