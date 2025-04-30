@@ -4,7 +4,7 @@ using Medium.Domain.UnitOfWorkInterface;
 
 namespace Medium.Application.Features.Categories.Queries
 {
-    public class GetAllCategorisQueryHandler : IRequestHandler<GetAllCategorisQuery, List<Category>>
+    public class GetAllCategorisQueryHandler : IRequestHandler<GetAllCategorisQuery, (IList<Category> items, int currentPage, int totalPages, int totalItems, int pageSize)>
     {
         private readonly IMediumUnitOfWork _mediumUnitOfWork;
 
@@ -13,10 +13,10 @@ namespace Medium.Application.Features.Categories.Queries
             _mediumUnitOfWork = mediumUnitOfWork;
         }
 
-        public async Task<List<Category>> Handle(GetAllCategorisQuery request, CancellationToken cancellationToken)
+        public async Task<(IList<Category> items, int currentPage, int totalPages, int totalItems, int pageSize)> Handle(GetAllCategorisQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _mediumUnitOfWork.CategoryRepository.GetAllAsync(cancellationToken);
-            return [..categories];
+            var categories = await _mediumUnitOfWork.CategoryRepository.GetAllAsync(request.PageIndex, request.PageSize, cancellationToken);
+            return categories;
         }
     }
 }

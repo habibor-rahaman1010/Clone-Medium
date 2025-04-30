@@ -3,6 +3,7 @@ using Medium.Application.Features.Categories.Commands;
 using Medium.Application.Features.Categories.Queries;
 using Medium.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 
 namespace Medium.Web.Areas.Admin.Controllers
@@ -23,11 +24,18 @@ namespace Medium.Web.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> CategoryList(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> CategoryList(int pageIndex = 1, int pageSize = 5, CancellationToken cancellationToken = default)
         {
-            var query = new GetAllCategorisQuery();
-            var categoryList = await _mediator.Send(query, cancellationToken);
-            return View(categoryList);
+            var query = new GetAllCategorisQuery(pageIndex, pageSize);
+            var pagedResult = await _mediator.Send(query, cancellationToken);
+
+            ViewBag.CurrentPage = pagedResult.currentPage;
+            ViewBag.TotalPages = pagedResult.totalPages;
+            ViewBag.TotalItems = pagedResult.totalItems;
+
+            var categories = pagedResult.items;
+
+            return View(categories);
         }
 
         public IActionResult CreateCategory()
@@ -38,16 +46,17 @@ namespace Medium.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CreateCategoryCommand command, CancellationToken cancellationToken = default)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _mediator.Send(command, cancellationToken);
+                return View(command);
             }
+            await _mediator.Send(command, cancellationToken);
             return RedirectToAction(nameof(CategoryList), "Category");
         }
 
         public async Task<IActionResult> CategoryDetails(Guid id, CancellationToken cancellationToken = default)
         {
-            var query = new GetCategoryByIdQuery { Id = id};
+            var query = new GetCategoryByIdQuery() { Id = id};
             var category = await _mediator.Send(query, cancellationToken);
             return View(category);
         }
@@ -55,7 +64,7 @@ namespace Medium.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> UpdateCategory(Guid id, CancellationToken cancellationToken)
         {
-            var query = new GetCategoryByIdQuery { Id = id };
+            var query = new GetCategoryByIdQuery(){ Id = id };
             var category = await _mediator.Send(query, cancellationToken);
             if (category == null)
             {
@@ -80,11 +89,8 @@ namespace Medium.Web.Areas.Admin.Controllers
             {
                 return View(command);
             }
-            var updateCategory = await _mediator.Send(command, cancellationToken);
-            if (updateCategory == null)
-            {
-                return NotFound();
-            }
+            await _mediator.Send(command, cancellationToken);
+
             return RedirectToAction(nameof(CategoryList), "Category");
         }
 

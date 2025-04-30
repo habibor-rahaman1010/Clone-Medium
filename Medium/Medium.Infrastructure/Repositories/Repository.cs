@@ -1,7 +1,6 @@
 ﻿using Medium.Domain.Entities;
 using Medium.Domain.RepositoriesInterface;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace Medium.Infrastructure.Repositories
@@ -47,10 +46,20 @@ namespace Medium.Infrastructure.Repositories
             }, cancellationToken);
         }
 
-        public virtual async Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+        public virtual async Task<(IList<TEntity> items, int currentPage, int totalPages, int totalItems, int pageSize)> GetAllAsync(int pageIndex, int pageSize, CancellationToken cancellationToken)
         {
             IQueryable<TEntity> query = _dbSet.AsQueryable<TEntity>();
-            return await query.ToListAsync(cancellationToken);  
+
+            var totalItems = await query.CountAsync(cancellationToken);
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var items = await query
+                .OrderBy(x => x.Id)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, pageIndex, totalPages, totalItems, pageSize);
         }
 
         public virtual async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken)

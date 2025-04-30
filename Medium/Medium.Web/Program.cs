@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Medium.Application.Features.Categories.Commands;
+using Medium.Application.ServiceCollectionExtensions;
 using Medium.Infrastructure.Data;
 using Medium.Web.Data;
 using Medium.Web.WebModules;
@@ -38,7 +39,7 @@ namespace Medium.Web
                 Log.Information("Application Starting...");
                 var builder = WebApplication.CreateBuilder(args);
 
-                builder.WebHost.UseUrls("http://*:80");
+                //builder.WebHost.UseUrls("http://*:80");
 
                 #region Serilog Configuration
                 builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
@@ -85,6 +86,10 @@ namespace Medium.Web
                     mfg.RegisterServicesFromAssembly(migrationAssembly);
                     mfg.RegisterServicesFromAssembly(typeof(CreateCategoryCommand).Assembly);
                 });
+
+                #region Fluent Validator Register
+                builder.Services.AddFluentValidatorRegister();
+                #endregion
 
                 var app = builder.Build();
 
