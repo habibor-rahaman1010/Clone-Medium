@@ -92,11 +92,11 @@ namespace Medium.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(CategoryUpdateModel model)
         {
-            var dto = _mapper.Map<CategoryDto>(model);
+            var CategoryDto = await model.BuildAdapter().AdaptToTypeAsync<CategoryDto>();
 
             if (!ModelState.IsValid)
             {
-                return View(nameof(UpdateCategory), dto);
+                return View(nameof(UpdateCategory), CategoryDto);
             }
 
             var category = await _categoryManagementService.GetCategoryById(model.Id);
