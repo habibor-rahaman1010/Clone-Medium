@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using MapsterMapper;
 using Medium.Application.Services;
 using Medium.Domain;
 using Medium.Domain.RepositoriesInterface;
@@ -46,6 +47,9 @@ namespace Medium.Web.WebModules
             
             builder.RegisterType<ApplicationTime>().As<IApplicationTime>()
                 .InstancePerLifetimeScope();
+
+            /*builder.RegisterType<IMapper>().As<ServiceMapper>()
+                .InstancePerLifetimeScope();*/
 
             base.Load(builder);
         }

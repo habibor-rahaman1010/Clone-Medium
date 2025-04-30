@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Mapster;
 using Medium.Infrastructure.Data;
 using Medium.Web.Data;
+using Medium.Web.MapsterProfiles;
 using Medium.Web.WebModules;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,7 @@ namespace Medium.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             #region Bootstrap Logger
             var configuration = new ConfigurationBuilder()
@@ -75,6 +77,10 @@ namespace Medium.Web
                     });
                 #endregion
 
+                //Mapsater Register here
+                TypeAdapterConfig.GlobalSettings.Apply(new MapsterWebProfile());
+                builder.Services.AddMapster();
+
                 var app = builder.Build();
 
                 // Configure the HTTP request pipeline.
@@ -109,7 +115,7 @@ namespace Medium.Web
                 app.MapRazorPages()
                    .WithStaticAssets();
 
-                app.Run();
+                await app.RunAsync();
             }
             catch (Exception ex)
             {
@@ -117,7 +123,7 @@ namespace Medium.Web
             }
             finally
             {
-                Log.CloseAndFlush();
+                 await Log.CloseAndFlushAsync();
             }
         }
     }

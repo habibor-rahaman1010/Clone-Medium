@@ -1,5 +1,4 @@
 ﻿using Medium.Infrastructure.Data;
-using Medium.Web.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Medium.Web.Controllers
@@ -7,7 +6,7 @@ namespace Medium.Web.Controllers
     public class ApplicationLogsController : Controller
     {
         private readonly MediumDbContext _context;
-        private readonly int _pageSize = 10;
+        private readonly int _pageSize = 20;
 
         public ApplicationLogsController(MediumDbContext context)
         {

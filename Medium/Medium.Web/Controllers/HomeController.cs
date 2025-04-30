@@ -20,6 +20,7 @@ namespace Medium.Web.Controllers
 
         public IActionResult Privacy()
         {
+            ViewData["Message"] = "Hello Programmer!";
             return View();
         }
 
