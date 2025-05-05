@@ -59,13 +59,11 @@ namespace Medium.Web
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
                 var migrationAssembly = Assembly.GetExecutingAssembly() ?? throw new InvalidOperationException("Migration Assembly not found.");
 
-                Assembly dbContextAssembly = Assembly.GetAssembly(typeof(ApplicationDbContext)) ?? throw new InvalidOperationException("Migration Assembly not found."); ;
-
                 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(dbContextAssembly)));
+                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
 
                 builder.Services.AddDbContext<MediumDbContext>(options =>
-                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(dbContextAssembly)));
+                    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
 
                 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

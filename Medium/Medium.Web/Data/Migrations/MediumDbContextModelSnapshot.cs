@@ -50,7 +50,7 @@ namespace Medium.Web.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationLogs");
+                    b.ToTable("ApplicationLogs", (string)null);
                 });
 
             modelBuilder.Entity("Medium.Domain.Entities.Categorries", b =>
@@ -75,7 +75,7 @@ namespace Medium.Web.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 #pragma warning restore 612, 618
         }
